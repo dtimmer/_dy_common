@@ -7,7 +7,16 @@ function getFormByName(name) {
   var __formParams = {};
   if(document.forms[name]) {
     [].forEach.call(document.forms[name], function(v, i) {
-      __formParams[v.name] = v.value;
+      // 如果为多选select，需要遍历options获取数组
+      if(v.type == "select-multiple") {
+        __formParams[v.name] = [].filter.call(v.options, function(v) {
+          return v.selected
+        }).map(function(v) {
+          return v.value;
+        });
+      } else {
+        __formParams[v.name] = v.value;
+      }
     });
   }
   return __formParams;
